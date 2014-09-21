@@ -30,11 +30,6 @@ func ppCode(title string, code int) {
 	return
 }
 
-func ppHeader(s string, v http.Header) {
-	fmt.Printf("\x1b[30;1m%s \x1b[30;0m%s\x1b[30;0m\n", s, v)
-	return
-}
-
 func main() {
 	client := &http.Client{}
 	method := flag.String("x", "GET", "a string")
@@ -56,7 +51,6 @@ func main() {
 	pp("HTTP Status:", res.Status)
 	ppCode("Status Code:", res.StatusCode)
 	pp("Proto:", res.Proto)
-	ppHeader("Header:", res.Header)
 
 	resBody, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
