@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+echo -n "Testing with "
+go version
+
+echo "Running go test in $PWD with GOPATH=$GOPATH"
+go test -parallel=2 -covermode=atomic -timeout=10s -race ./...
+
+echo
+go vet .

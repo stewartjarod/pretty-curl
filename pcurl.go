@@ -5,30 +5,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/yosssi/gohtml"
 )
-
-func isJSON(s string) bool {
-	var js map[string]interface{}
-	return json.Unmarshal([]byte(s), &js) == nil
-}
-
-func pp(s string, v string) {
-	fmt.Printf("\x1b[30;1m%v \x1b[30;0m%s\n", s, v)
-	return
-}
-
-func ppCode(title string, code int) {
-	if code == 200 || code == 201 || code == 202 {
-		fmt.Printf("\x1b[30;1m%s \x1b[22;32m%d\x1b[30;0m\n", title, code)
-	} else {
-		fmt.Printf("\x1b[30;1m%s \x1b[30;0m%d\x1b[30;0m\n", title, code)
-	}
-	return
-}
 
 func main() {
 	client := &http.Client{}
@@ -43,22 +25,18 @@ func main() {
 		fmt.Println(err)
 	}
 
-	fmt.Println("\x1b[34m======================================")
-	fmt.Println("                HEADER")
-	fmt.Println("======================================\x1b[0m")
-	pp("url:", url)
-	pp("method:", *method)
-	pp("HTTP Status:", res.Status)
-	ppCode("Status Code:", res.StatusCode)
-	pp("Proto:", res.Proto)
+	Header("HEADER")
+	PPKeyVal("URL:", url)
+	PPKeyVal("Method:", *method)
+	PPKeyVal("HTTP Status:", res.Status)
+	PPrintCode("Status Code:", res.StatusCode)
+	PPKeyVal("Protocol:", res.Proto)
+	Header("BODY")
 
 	resBody, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 
-	fmt.Println("\x1b[34m======================================")
-	fmt.Println("                BODY")
-	fmt.Println("======================================\x1b[0m")
-	if isJSON(string(resBody)) {
+	if IsJSON(string(resBody)) {
 		var out bytes.Buffer
 		json.Indent(&out, resBody, "", "    ")
 		out.WriteTo(os.Stdout)
