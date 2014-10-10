@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/yosssi/gohtml"
 )
@@ -37,9 +34,7 @@ func main() {
 	res.Body.Close()
 
 	if IsJSON(string(resBody)) {
-		var out bytes.Buffer
-		json.Indent(&out, resBody, "", "    ")
-		out.WriteTo(os.Stdout)
+		PrintJSON(resBody)
 	} else {
 		fmt.Println(gohtml.Format(string(resBody)))
 	}
