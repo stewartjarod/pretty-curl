@@ -1,0 +1,22 @@
+export GOPATH=$GOPATH:$DIR/Godeps/_workspace
+export GOARCH=amd64
+
+# default to linux
+platform='linux'
+
+# $OSTYPE is in the format [name][version]
+os=${OSTYPE//[0-9.]/}
+
+# if on a mac, use GOOS=darwin
+if [[ $os == 'darwin' ]]; then
+  platform='darwin'
+fi
+
+export GOOS=$platform
+
+echo "=> RUNNING $0" `date`
+
+export VERSION=`cat version`
+if [ -z "$VERSION" ]; then
+  echo "UNABLE TO DETECT VERSION" > /dev/stderr && exit 1
+fi
